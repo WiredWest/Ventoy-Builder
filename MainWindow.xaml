@@ -1,0 +1,955 @@
+﻿<Window x:Class="Ventoy_Builder.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Ventoy Builder"
+        MinHeight="760"
+        MinWidth="1150"
+        Height="1040"
+        Width="1800"
+        SizeToContent="Manual"
+        WindowStartupLocation="CenterScreen"
+        Background="#1E1E1E"
+        Foreground="White"
+        AllowDrop="True"
+        DragOver="Window_DragOver"
+        Drop="Window_Drop">
+
+    <Grid Margin="16">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="6"/>
+            <RowDefinition Height="220"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- HEADER -->
+
+        <TextBlock Grid.Row="0"
+                   Text="VENTOY BUILDER"
+                   FontSize="28"
+                   FontWeight="Bold"
+                   Margin="0,0,0,14"/>
+
+        <!-- MAIN CONTENT -->
+
+        <Grid Grid.Row="1">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.15*" MinWidth="310"/>
+                <ColumnDefinition Width="6"/>
+                <ColumnDefinition Width="1.55*" MinWidth="390"/>
+                <ColumnDefinition Width="6"/>
+                <ColumnDefinition Width="2.05*" MinWidth="500"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- LEFT: USB DRIVE + USB CONTENTS -->
+
+            <Border Grid.Column="0"
+                    Background="#2A2A2A"
+                    CornerRadius="10"
+                    Padding="12">
+
+                <Grid>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0">
+
+                        <TextBlock Text="USB Drive"
+                                   FontSize="20"
+                                   FontWeight="Bold"
+                                   Margin="0,0,0,6"/>
+
+                        <TextBlock Text="Start here. Pick the USB drive you want to prepare. Everything Ventoy Builder does will target the selected drive."
+                                   FontSize="12"
+                                   Foreground="#CCCCCC"
+                                   TextWrapping="Wrap"
+                                   Margin="0,0,0,10"/>
+
+                        <ListView x:Name="UsbDriveList"
+                                  Height="235"
+                                  Background="#1F1F1F"
+                                  BorderBrush="#444"
+                                  Foreground="White">
+
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Drive"
+                                                    Width="58"
+                                                    DisplayMemberBinding="{Binding DriveLetter}"/>
+
+                                    <GridViewColumn Header="Label"
+                                                    Width="105"
+                                                    DisplayMemberBinding="{Binding Label}"/>
+
+                                    <GridViewColumn Header="Size"
+                                                    Width="75"
+                                                    DisplayMemberBinding="{Binding SizeText}"/>
+
+                                    <GridViewColumn Header="Free"
+                                                    Width="75"
+                                                    DisplayMemberBinding="{Binding FreeSpaceText}"/>
+                                </GridView>
+                            </ListView.View>
+
+                        </ListView>
+
+                        <Button x:Name="RefreshButton"
+                                Content="Refresh USB Drive List"
+                                Height="34"
+                                Margin="0,10,0,0"
+                                Click="RefreshButton_Click"/>
+
+                        <Separator Margin="0,12,0,10"/>
+
+                        <TextBlock Text="Selected Drive Details"
+                                   FontSize="15"
+                                   FontWeight="Bold"
+                                   Margin="0,0,0,6"/>
+
+                        <TextBlock x:Name="DriveInfoText"
+                                   FontSize="12"
+                                   Foreground="#DDDDDD"
+                                   TextWrapping="Wrap"
+                                   Margin="0,0,0,12"/>
+
+                    </StackPanel>
+
+                    <DockPanel Grid.Row="1">
+
+                        <StackPanel DockPanel.Dock="Top">
+
+                            <TextBlock Text="USB Contents"
+                                       FontSize="18"
+                                       FontWeight="Bold"
+                                       Margin="0,0,0,6"/>
+
+                            <TextBlock Text="This shows the boot images already copied to the selected USB. Right-click a file to manage it."
+                                       FontSize="12"
+                                       Foreground="#CCCCCC"
+                                       TextWrapping="Wrap"
+                                       Margin="0,0,0,8"/>
+
+                            <Button x:Name="RefreshUsbContentsButton"
+                                    Content="Refresh USB Contents"
+                                    Height="32"
+                                    Margin="0,0,0,8"
+                                    Click="RefreshUsbContentsButton_Click"/>
+
+                        </StackPanel>
+
+                        <TreeView x:Name="UsbContentsTreeView"
+                                  Background="#1F1F1F"
+                                  BorderBrush="#444"
+                                  Foreground="White"
+                                  ContextMenuOpening="UsbContentsTreeView_ContextMenuOpening">
+
+                            <TreeView.Resources>
+                                <Style TargetType="TreeViewItem">
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="Padding" Value="4"/>
+
+                                    <EventSetter Event="PreviewMouseRightButtonDown"
+                                                 Handler="UsbTreeViewItem_PreviewMouseRightButtonDown"/>
+
+                                    <Style.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" Value="#444"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                        </Trigger>
+
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#333"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TreeView.Resources>
+
+                            <TreeView.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Open File Location"
+                                              Click="OpenUsbItemLocation_Click"/>
+
+                                    <MenuItem Header="Delete Selected Boot Image"
+                                              Click="DeleteUsbItem_Click"/>
+
+                                    <Separator/>
+
+                                    <MenuItem Header="Refresh USB Contents"
+                                              Click="RefreshUsbContentsButton_Click"/>
+                                </ContextMenu>
+                            </TreeView.ContextMenu>
+
+                        </TreeView>
+
+                    </DockPanel>
+
+                </Grid>
+
+            </Border>
+
+            <GridSplitter Grid.Column="1"
+                          Width="6"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch"
+                          Background="#444"
+                          ResizeBehavior="PreviousAndNext"
+                          ShowsPreview="True"/>
+
+            <!-- CENTER: LIBRARY + ORDERABLE MENU LIST -->
+
+            <Border Grid.Column="2"
+                    Background="#2A2A2A"
+                    CornerRadius="10"
+                    Padding="12">
+
+                <Grid>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1.15*" MinHeight="260"/>
+                        <RowDefinition Height="6"/>
+                        <RowDefinition Height="1*" MinHeight="260"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- BOOT IMAGE LIBRARY -->
+
+                    <DockPanel Grid.Row="0">
+
+                        <StackPanel DockPanel.Dock="Top">
+
+                            <TextBlock Text="Boot Image Library"
+                                       FontSize="20"
+                                       FontWeight="Bold"
+                                       Margin="0,0,0,6"/>
+
+                            <TextBlock Text="Scan folders on your computer for ISO, IMG, WIM, VHD, and VHDX files. Double-click a library item to copy it to the selected USB."
+                                       FontSize="12"
+                                       Foreground="#CCCCCC"
+                                       TextWrapping="Wrap"
+                                       Margin="0,0,0,8"/>
+
+                            <TextBox x:Name="IsoSearchTextBox"
+                                     Height="30"
+                                     Margin="0,0,0,8"
+                                     Background="#1F1F1F"
+                                     Foreground="White"
+                                     BorderBrush="#444"
+                                     TextChanged="IsoSearchTextBox_TextChanged"/>
+
+                            <WrapPanel Margin="0,0,0,8">
+
+                                <Button x:Name="ScanIsoFolderButton"
+                                        Content="Scan Folder"
+                                        Height="32"
+                                        Width="115"
+                                        Margin="0,0,8,6"
+                                        Click="ScanIsoFolderButton_Click"/>
+
+                                <Button x:Name="CancelScanButton"
+                                        Content="Cancel"
+                                        Height="32"
+                                        Width="80"
+                                        Margin="0,0,8,6"
+                                        Click="CancelScanButton_Click"
+                                        IsEnabled="False"/>
+
+                                <Button x:Name="ClearIsoLibraryButton"
+                                        Content="Clear"
+                                        Height="32"
+                                        Width="80"
+                                        Margin="0,0,0,6"
+                                        Click="ClearIsoLibraryButton_Click"/>
+
+                            </WrapPanel>
+
+                        </StackPanel>
+
+                        <ListView x:Name="IsoLibraryList"
+                                  Background="#1F1F1F"
+                                  BorderBrush="#444"
+                                  Foreground="White"
+                                  MouseDoubleClick="IsoLibraryList_MouseDoubleClick">
+
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Display Name"
+                                                    Width="220"
+                                                    DisplayMemberBinding="{Binding DisplayName}"/>
+
+                                    <GridViewColumn Header="Type"
+                                                    Width="95"
+                                                    DisplayMemberBinding="{Binding DetectedType}"/>
+
+                                    <GridViewColumn Header="Arch"
+                                                    Width="70"
+                                                    DisplayMemberBinding="{Binding Architecture}"/>
+
+                                    <GridViewColumn Header="Size"
+                                                    Width="85"
+                                                    DisplayMemberBinding="{Binding SizeText}"/>
+                                </GridView>
+                            </ListView.View>
+
+                        </ListView>
+
+                    </DockPanel>
+
+                    <GridSplitter Grid.Row="1"
+                                  Height="6"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Stretch"
+                                  Background="#444"
+                                  ResizeBehavior="PreviousAndNext"
+                                  ShowsPreview="True"/>
+
+                    <!-- BOOT ORDER / MENU STRUCTURE -->
+
+                    <DockPanel Grid.Row="2">
+
+                        <StackPanel DockPanel.Dock="Top">
+
+                            <TextBlock Text="Custom Boot Menu Order"
+                                       FontSize="18"
+                                       FontWeight="Bold"
+                                       Margin="0,0,0,6"/>
+
+                            <TextBlock Text="These are the boot images found on the USB. Drag to reorder them, then apply friendly names before generating the Ventoy menu."
+                                       FontSize="12"
+                                       Foreground="#CCCCCC"
+                                       TextWrapping="Wrap"
+                                       Margin="0,0,0,8"/>
+
+                            <WrapPanel Margin="0,0,0,8">
+
+                                <Button x:Name="MoveBootItemUpButton"
+                                        Content="▲ Move Up"
+                                        Width="100"
+                                        Height="30"
+                                        Margin="0,0,8,6"
+                                        Click="MoveBootItemUpButton_Click"/>
+
+                                <Button x:Name="MoveBootItemDownButton"
+                                        Content="▼ Move Down"
+                                        Width="115"
+                                        Height="30"
+                                        Margin="0,0,8,6"
+                                        Click="MoveBootItemDownButton_Click"/>
+
+                                <Button x:Name="RefreshBootOrderButton"
+                                        Content="Reload USB Items"
+                                        Width="135"
+                                        Height="30"
+                                        Margin="0,0,0,6"
+                                        Click="RefreshBootOrderButton_Click"/>
+
+                            </WrapPanel>
+
+                            <Border Background="#111111"
+                                    CornerRadius="6"
+                                    Padding="8"
+                                    BorderBrush="#333333"
+                                    BorderThickness="1"
+                                    Margin="0,0,0,8">
+
+                                <StackPanel>
+
+                                    <TextBlock Text="Rename Selected Menu Entry"
+                                               FontSize="13"
+                                               FontWeight="Bold"
+                                               Margin="0,0,0,4"/>
+
+                                    <TextBlock x:Name="SelectedBootItemText"
+                                               Text="No item selected"
+                                               FontSize="11"
+                                               TextWrapping="Wrap"
+                                               Foreground="#DDDDDD"
+                                               Margin="0,0,0,6"/>
+
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="8"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="6"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBox x:Name="CustomAliasTextBox"
+                                                 Grid.Column="0"
+                                                 Height="30"
+                                                 Background="#0B0B0B"
+                                                 Foreground="White"
+                                                 BorderBrush="#444"/>
+
+                                        <Button x:Name="ApplyAliasButton"
+                                                Grid.Column="2"
+                                                Content="Apply"
+                                                Width="75"
+                                                Height="30"
+                                                Click="ApplyAliasButton_Click"/>
+
+                                        <Button x:Name="ResetAliasButton"
+                                                Grid.Column="4"
+                                                Content="Reset"
+                                                Width="70"
+                                                Height="30"
+                                                Click="ResetAliasButton_Click"/>
+                                    </Grid>
+
+                                </StackPanel>
+
+                            </Border>
+
+                        </StackPanel>
+
+                        <ListBox x:Name="BootOrderListBox"
+                                 Background="#1F1F1F"
+                                 BorderBrush="#444"
+                                 Foreground="White"
+                                 AllowDrop="True"
+                                 SelectionChanged="BootOrderListBox_SelectionChanged"
+                                 PreviewMouseLeftButtonDown="BootOrderListBox_PreviewMouseLeftButtonDown"
+                                 MouseMove="BootOrderListBox_MouseMove"
+                                 DragOver="BootOrderListBox_DragOver"
+                                 Drop="BootOrderListBox_Drop">
+
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Margin="2"
+                                            Padding="6"
+                                            CornerRadius="5"
+                                            Background="#262626">
+
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding CustomAlias}"
+                                                       FontWeight="Bold"
+                                                       FontSize="12"
+                                                       Foreground="White"
+                                                       TextTrimming="CharacterEllipsis"/>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding DetectedType}"
+                                                           FontSize="10"
+                                                           Foreground="#BBBBBB"/>
+
+                                                <TextBlock Text=" • "
+                                                           FontSize="10"
+                                                           Foreground="#777777"/>
+
+                                                <TextBlock Text="{Binding Architecture}"
+                                                           FontSize="10"
+                                                           Foreground="#BBBBBB"/>
+
+                                                <TextBlock Text=" • "
+                                                           FontSize="10"
+                                                           Foreground="#777777"/>
+
+                                                <TextBlock Text="{Binding Category}"
+                                                           FontSize="10"
+                                                           Foreground="#BBBBBB"/>
+                                            </StackPanel>
+                                        </StackPanel>
+
+                                    </Border>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+
+                        </ListBox>
+
+                    </DockPanel>
+
+                </Grid>
+
+            </Border>
+
+            <GridSplitter Grid.Column="3"
+                          Width="6"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch"
+                          Background="#444"
+                          ResizeBehavior="PreviousAndNext"
+                          ShowsPreview="True"/>
+
+            <!-- RIGHT: WIDE GUIDED BUILDER -->
+
+            <Border Grid.Column="4"
+                    Background="#2A2A2A"
+                    CornerRadius="10"
+                    Padding="14">
+
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+
+                    <StackPanel>
+
+                        <TextBlock Text="Guided Builder"
+                                   FontSize="24"
+                                   FontWeight="Bold"
+                                   Margin="0,0,0,6"/>
+
+                        <TextBlock Text="This step-by-step guide is for users who want the app to explain what to do, why it matters, and what each button is going to change."
+                                   FontSize="13"
+                                   Foreground="#CCCCCC"
+                                   TextWrapping="Wrap"
+                                   Margin="0,0,0,14"/>
+
+                        <!-- STEP 1 -->
+
+                        <Border Background="#1B1B1B"
+                                CornerRadius="8"
+                                Padding="12"
+                                BorderBrush="#333"
+                                BorderThickness="1"
+                                Margin="0,0,0,10">
+
+                            <StackPanel>
+
+                                <TextBlock Text="1. Select the correct USB drive"
+                                           FontWeight="Bold"
+                                           FontSize="16"
+                                           Margin="0,0,0,4"/>
+
+                                <TextBlock Text="Choose the USB drive in the left panel. Be careful: installing Ventoy prepares that selected drive. Make sure you are not choosing a backup drive or another important removable disk."
+                                           FontSize="12"
+                                           Foreground="#CCCCCC"
+                                           TextWrapping="Wrap"
+                                           Margin="0,0,0,6"/>
+
+                                <TextBlock Text="Tip: If you just plugged in a USB drive and do not see it, click Refresh USB Drive List."
+                                           FontSize="12"
+                                           Foreground="#E6D28A"
+                                           TextWrapping="Wrap"/>
+
+                            </StackPanel>
+
+                        </Border>
+
+                        <!-- STEP 2 -->
+
+                        <Border Background="#1B1B1B"
+                                CornerRadius="8"
+                                Padding="12"
+                                BorderBrush="#333"
+                                BorderThickness="1"
+                                Margin="0,0,0,10">
+
+                            <StackPanel>
+
+                                <TextBlock Text="2. Install or update Ventoy"
+                                           FontWeight="Bold"
+                                           FontSize="16"
+                                           Margin="0,0,0,4"/>
+
+                                <TextBlock Text="Ventoy is the boot system that lets the USB start ISO files directly. Installing Ventoy is usually done once on a new USB. Updating Ventoy is used later when you already have a Ventoy USB and want to refresh the Ventoy boot files."
+                                           FontSize="12"
+                                           Foreground="#CCCCCC"
+                                           TextWrapping="Wrap"
+                                           Margin="0,0,0,8"/>
+
+                                <TextBlock Text="Recommended for most modern computers: leave GPT checked. GPT is the newer partition style used by most UEFI systems."
+                                           FontSize="12"
+                                           Foreground="#E6D28A"
+                                           TextWrapping="Wrap"
+                                           Margin="0,0,0,8"/>
+
+                                <CheckBox x:Name="UseGptCheckBox"
+                                          Content="Use GPT partition style"
+                                          Margin="0,0,0,8"
+                                          IsChecked="True"/>
+
+                                <WrapPanel>
+
+                                    <Button x:Name="InstallVentoyButton"
+                                            Content="Install Ventoy to USB"
+                                            Width="175"
+                                            Height="34"
+                                            Margin="0,0,8,8"
+                                            Click="InstallVentoyButton_Click"/>
+
+                                    <Button x:Name="UpdateVentoyButton"
+                                            Content="Update Existing Ventoy"
+                                            Width="185"
+                                            Height="34"
+                                            Margin="0,0,8,8"
+                                            Click="UpdateVentoyButton_Click"/>
+
+                                    <Button x:Name="LaunchVentoyGuiButton"
+                                            Content="Open Official Tool"
+                                            Width="155"
+                                            Height="34"
+                                            Margin="0,0,0,8"
+                                            Click="LaunchVentoyGuiButton_Click"/>
+
+                                </WrapPanel>
+
+                            </StackPanel>
+
+                        </Border>
+
+                        <!-- STEP 3 -->
+
+                        <Border Background="#1B1B1B"
+                                CornerRadius="8"
+                                Padding="12"
+                                BorderBrush="#333"
+                                BorderThickness="1"
+                                Margin="0,0,0,10">
+
+                            <StackPanel>
+
+                                <TextBlock Text="3. Create the recommended folder layout"
+                                           FontWeight="Bold"
+                                           FontSize="16"
+                                           Margin="0,0,0,4"/>
+
+                                <TextBlock Text="This creates organized folders on the USB: Windows, Linux, Recovery, Utilities, Drivers, Images, and Tools. These folders make the USB easier to maintain and help Ventoy Builder group files logically."
+                                           FontSize="12"
+                                           Foreground="#CCCCCC"
+                                           TextWrapping="Wrap"
+                                           Margin="0,0,0,8"/>
+
+                                <Button x:Name="CreateFoldersButton"
+                                        Content="Create Recommended Folder Layout"
+                                        Height="34"
+                                        Click="CreateFoldersButton_Click"/>
+
+                            </StackPanel>
+
+                        </Border>
+
+                        <!-- STEP 4 -->
+
+                        <Border Background="#1B1B1B"
+                                CornerRadius="8"
+                                Padding="12"
+                                BorderBrush="#333"
+                                BorderThickness="1"
+                                Margin="0,0,0,10">
+
+                            <StackPanel>
+
+                                <TextBlock Text="4. Add boot images"
+                                           FontWeight="Bold"
+                                           FontSize="16"
+                                           Margin="0,0,0,4"/>
+
+                                <TextBlock Text="Boot images are files such as Windows installers, Linux ISOs, recovery utilities, rescue environments, driver packs, and disk tools. You can scan your computer into the library first, then double-click items to copy them, or use the copy button."
+                                           FontSize="12"
+                                           Foreground="#CCCCCC"
+                                           TextWrapping="Wrap"
+                                           Margin="0,0,0,8"/>
+
+                                <Button x:Name="AddIsoButton"
+                                        Content="Copy Boot Images to USB"
+                                        Height="34"
+                                        Click="AddIsoButton_Click"/>
+
+                            </StackPanel>
+
+                        </Border>
+
+                        <!-- STEP 5 -->
+
+                        <Border Background="#1B1B1B"
+                                CornerRadius="8"
+                                Padding="12"
+                                BorderBrush="#333"
+                                BorderThickness="1"
+                                Margin="0,0,0,10">
+
+                            <StackPanel>
+
+                                <TextBlock Text="5. Customize names and order"
+                                           FontWeight="Bold"
+                                           FontSize="16"
+                                           Margin="0,0,0,4"/>
+
+                                <TextBlock Text="The center panel shows images currently found on the USB. Drag items into the order you want. Select an item to give it a friendly boot menu name, such as “Windows 11 Installer” instead of a long filename."
+                                           FontSize="12"
+                                           Foreground="#CCCCCC"
+                                           TextWrapping="Wrap"
+                                           Margin="0,0,0,8"/>
+
+                                <TextBlock Text="This does not rename the actual ISO file. It only changes how the item appears in the Ventoy boot menu."
+                                           FontSize="12"
+                                           Foreground="#E6D28A"
+                                           TextWrapping="Wrap"/>
+
+                            </StackPanel>
+
+                        </Border>
+
+                        <!-- STEP 6 -->
+
+                        <Border Background="#1B1B1B"
+                                CornerRadius="8"
+                                Padding="12"
+                                BorderBrush="#333"
+                                BorderThickness="1">
+
+                            <StackPanel>
+
+                                <TextBlock Text="6. Generate the custom Ventoy menu"
+                                           FontWeight="Bold"
+                                           FontSize="16"
+                                           Margin="0,0,0,4"/>
+
+                                <TextBlock Text="This writes your custom names and menu settings to /ventoy/ventoy.json on the USB. If an older menu file already exists, Ventoy Builder backs it up first."
+                                           FontSize="12"
+                                           Foreground="#CCCCCC"
+                                           TextWrapping="Wrap"
+                                           Margin="0,0,0,8"/>
+
+                                <Button x:Name="GenerateVentoyMenuButton"
+                                        Content="Generate Custom Ventoy Menu"
+                                        Height="38"
+                                        Click="GenerateVentoyMenuButton_Click"/>
+
+                            </StackPanel>
+
+                        </Border>
+
+                    </StackPanel>
+
+                </ScrollViewer>
+
+            </Border>
+
+        </Grid>
+
+        <!-- ROW SPLITTER -->
+
+        <GridSplitter Grid.Row="2"
+                      Height="6"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch"
+                      Background="#444"
+                      ResizeBehavior="PreviousAndNext"
+                      ShowsPreview="True"/>
+
+        <!-- DASHBOARD -->
+
+        <Grid Grid.Row="3">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="420" MinWidth="300"/>
+                <ColumnDefinition Width="6"/>
+                <ColumnDefinition Width="*" MinWidth="300"/>
+                <ColumnDefinition Width="6"/>
+                <ColumnDefinition Width="360" MinWidth="220"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- GAUGE -->
+
+            <Border Grid.Column="0"
+                    Background="#202020"
+                    CornerRadius="10"
+                    Padding="12">
+
+                <Grid>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="170"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Grid.Column="0"
+                          Width="160"
+                          Height="150"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center">
+
+                        <Canvas Width="160"
+                                Height="150">
+
+                            <Ellipse Canvas.Left="15"
+                                     Canvas.Top="8"
+                                     Width="130"
+                                     Height="130"
+                                     Fill="#050505"
+                                     Stroke="#666666"
+                                     StrokeThickness="3"/>
+
+                            <Rectangle Canvas.Left="0"
+                                       Canvas.Top="80"
+                                       Width="160"
+                                       Height="70"
+                                       Fill="#202020"/>
+
+                            <Line X1="24" Y1="76" X2="42" Y2="76" Stroke="#DDDDDD" StrokeThickness="2"/>
+                            <Line X1="48" Y1="40" X2="58" Y2="52" Stroke="#888888" StrokeThickness="2"/>
+                            <Line X1="80" Y1="22" X2="80" Y2="38" Stroke="#DDDDDD" StrokeThickness="2"/>
+                            <Line X1="112" Y1="40" X2="102" Y2="52" Stroke="#888888" StrokeThickness="2"/>
+                            <Line X1="118" Y1="76" X2="136" Y2="76" Stroke="#DDDDDD" StrokeThickness="2"/>
+
+                            <TextBlock Text="E"
+                                       Canvas.Left="21"
+                                       Canvas.Top="70"
+                                       Foreground="#DDDDDD"
+                                       FontWeight="Bold"
+                                       FontSize="15"/>
+
+                            <TextBlock Text="F"
+                                       Canvas.Left="132"
+                                       Canvas.Top="70"
+                                       Foreground="#DDDDDD"
+                                       FontWeight="Bold"
+                                       FontSize="15"/>
+
+                            <Line x:Name="CircularGaugeNeedle"
+                                  X1="80"
+                                  Y1="78"
+                                  X2="32"
+                                  Y2="76"
+                                  Stroke="#FF3333"
+                                  StrokeThickness="4"
+                                  StrokeStartLineCap="Round"
+                                  StrokeEndLineCap="Round">
+
+                                <Line.RenderTransform>
+                                    <RotateTransform x:Name="CircularGaugeNeedleRotate"
+                                                     Angle="0"
+                                                     CenterX="80"
+                                                     CenterY="78"/>
+                                </Line.RenderTransform>
+
+                            </Line>
+
+                            <Ellipse Canvas.Left="71"
+                                     Canvas.Top="69"
+                                     Width="18"
+                                     Height="18"
+                                     Fill="#111111"
+                                     Stroke="#CCCCCC"
+                                     StrokeThickness="2"/>
+
+                            <Border Canvas.Left="32"
+                                    Canvas.Top="92"
+                                    Width="96"
+                                    Height="40"
+                                    Background="#000000"
+                                    BorderBrush="#111111"
+                                    BorderThickness="2"
+                                    CornerRadius="5">
+
+                                <TextBlock x:Name="CircularGaugePercentText"
+                                           Text="0%"
+                                           FontFamily="Consolas"
+                                           FontSize="30"
+                                           FontWeight="Bold"
+                                           Foreground="#00FF66"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+
+                            </Border>
+
+                        </Canvas>
+
+                    </Grid>
+
+                    <StackPanel Grid.Column="1"
+                                VerticalAlignment="Center">
+
+                        <TextBlock x:Name="ProgressLabel"
+                                   Text="Progress: idle"
+                                   FontSize="14"
+                                   FontWeight="Bold"
+                                   Margin="0,0,0,8"/>
+
+                        <TextBlock x:Name="ProgressDetailText"
+                                   Text=""
+                                   FontSize="12"
+                                   Foreground="#CCCCCC"
+                                   TextWrapping="Wrap"/>
+
+                    </StackPanel>
+
+                </Grid>
+
+            </Border>
+
+            <GridSplitter Grid.Column="1"
+                          Width="6"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch"
+                          Background="#444"
+                          ResizeBehavior="PreviousAndNext"
+                          ShowsPreview="True"/>
+
+            <!-- ACTIVITY LOG -->
+
+            <Border Grid.Column="2"
+                    Background="#111"
+                    CornerRadius="10"
+                    Padding="10"
+                    BorderBrush="#333"
+                    BorderThickness="1">
+
+                <DockPanel>
+
+                    <TextBlock DockPanel.Dock="Top"
+                               Text="Activity Log"
+                               FontSize="16"
+                               FontWeight="Bold"
+                               Margin="0,0,0,8"/>
+
+                    <TextBox x:Name="LogTextBox"
+                             Background="#0B0B0B"
+                             Foreground="#EAEAEA"
+                             BorderBrush="#333"
+                             FontFamily="Consolas"
+                             FontSize="13"
+                             TextWrapping="Wrap"
+                             VerticalScrollBarVisibility="Auto"
+                             IsReadOnly="True"/>
+
+                </DockPanel>
+
+            </Border>
+
+            <GridSplitter Grid.Column="3"
+                          Width="6"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch"
+                          Background="#444"
+                          ResizeBehavior="PreviousAndNext"
+                          ShowsPreview="True"/>
+
+            <!-- IMAGE PANEL -->
+
+            <Border Grid.Column="4"
+                    Background="#111"
+                    CornerRadius="10"
+                    Padding="10"
+                    BorderBrush="#333"
+                    BorderThickness="1">
+
+                <Image Source="Assets/Images/wooden-computer.png"
+                       Stretch="Uniform"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
+
+            </Border>
+
+        </Grid>
+
+        <!-- STATUS -->
+
+        <StatusBar Grid.Row="4"
+                   Background="#2A2A2A"
+                   Margin="0,15,0,0">
+
+            <TextBlock x:Name="StatusText"
+                       Text="Ready"
+                       Foreground="White"/>
+
+        </StatusBar>
+
+    </Grid>
+
+</Window>

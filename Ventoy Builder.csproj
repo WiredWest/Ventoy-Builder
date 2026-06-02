@@ -1,0 +1,225 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <RootNamespace>Ventoy_Builder</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\Images\wooden-computer.png" />
+    <None Remove="Assets\Ventoy\altexe\Ventoy2Disk_ARM.exe" />
+    <None Remove="Assets\Ventoy\altexe\Ventoy2Disk_ARM64.exe" />
+    <None Remove="Assets\Ventoy\altexe\Ventoy2Disk_X64.exe" />
+    <None Remove="Assets\Ventoy\altexe\VentoyPlugson_X64.exe" />
+    <None Remove="Assets\Ventoy\boot\boot.img" />
+    <None Remove="Assets\Ventoy\boot\core.img.xz" />
+    <None Remove="Assets\Ventoy\FOR_X64_ARM.txt" />
+    <None Remove="Assets\Ventoy\log.txt" />
+    <None Remove="Assets\Ventoy\plugin\ventoy\theme\background.png" />
+    <None Remove="Assets\Ventoy\plugin\ventoy\theme\icons\deepin.png" />
+    <None Remove="Assets\Ventoy\plugin\ventoy\theme\icons\red-hat.png" />
+    <None Remove="Assets\Ventoy\plugin\ventoy\theme\icons\ubuntu.png" />
+    <None Remove="Assets\Ventoy\plugin\ventoy\theme\icons\vtoyiso.png" />
+    <None Remove="Assets\Ventoy\plugin\ventoy\theme\menu_c.png" />
+    <None Remove="Assets\Ventoy\plugin\ventoy\theme\menu_e.png" />
+    <None Remove="Assets\Ventoy\plugin\ventoy\theme\menu_n.png" />
+    <None Remove="Assets\Ventoy\plugin\ventoy\theme\menu_ne.png" />
+    <None Remove="Assets\Ventoy\plugin\ventoy\theme\menu_nw.png" />
+    <None Remove="Assets\Ventoy\plugin\ventoy\theme\menu_s.png" />
+    <None Remove="Assets\Ventoy\plugin\ventoy\theme\menu_se.png" />
+    <None Remove="Assets\Ventoy\plugin\ventoy\theme\menu_sw.png" />
+    <None Remove="Assets\Ventoy\plugin\ventoy\theme\menu_w.png" />
+    <None Remove="Assets\Ventoy\plugin\ventoy\theme\select_c.png" />
+    <None Remove="Assets\Ventoy\plugin\ventoy\theme\slider_c.png" />
+    <None Remove="Assets\Ventoy\plugin\ventoy\theme\slider_n.png" />
+    <None Remove="Assets\Ventoy\plugin\ventoy\theme\slider_s.png" />
+    <None Remove="Assets\Ventoy\plugin\ventoy\theme\terminal_box_c.png" />
+    <None Remove="Assets\Ventoy\plugin\ventoy\theme\terminal_box_e.png" />
+    <None Remove="Assets\Ventoy\plugin\ventoy\theme\terminal_box_n.png" />
+    <None Remove="Assets\Ventoy\plugin\ventoy\theme\terminal_box_ne.png" />
+    <None Remove="Assets\Ventoy\plugin\ventoy\theme\terminal_box_nw.png" />
+    <None Remove="Assets\Ventoy\plugin\ventoy\theme\terminal_box_s.png" />
+    <None Remove="Assets\Ventoy\plugin\ventoy\theme\terminal_box_se.png" />
+    <None Remove="Assets\Ventoy\plugin\ventoy\theme\terminal_box_sw.png" />
+    <None Remove="Assets\Ventoy\plugin\ventoy\theme\terminal_box_w.png" />
+    <None Remove="Assets\Ventoy\plugin\ventoy\theme\theme.txt" />
+    <None Remove="Assets\Ventoy\plugin\ventoy\ventoy.json" />
+    <None Remove="Assets\Ventoy\plugin\ventoy\ventoy_grub.cfg" />
+    <None Remove="Assets\Ventoy\Ventoy2Disk.exe" />
+    <None Remove="Assets\Ventoy\Ventoy2Disk.ini" />
+    <None Remove="Assets\Ventoy\VentoyPlugson.exe" />
+    <None Remove="Assets\Ventoy\VentoyPlugson.log" />
+    <None Remove="Assets\Ventoy\VentoyVlnk.exe" />
+    <None Remove="Assets\Ventoy\VentoyVlnk.log" />
+    <None Remove="Assets\Ventoy\ventoy\languages.json" />
+    <None Remove="Assets\Ventoy\ventoy\plugson.tar.xz" />
+    <None Remove="Assets\Ventoy\ventoy\ventoy.disk.img.xz" />
+    <None Remove="Assets\Ventoy\ventoy\ventoy_4k.disk.img.xz" />
+    <None Remove="Assets\Ventoy\ventoy\version" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\Ventoy\altexe\Ventoy2Disk_ARM.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\altexe\Ventoy2Disk_ARM64.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\altexe\Ventoy2Disk_X64.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\altexe\VentoyPlugson_X64.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\boot\boot.img">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\boot\core.img.xz">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\FOR_X64_ARM.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\log.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\plugin\ventoy\theme\background.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\plugin\ventoy\theme\icons\deepin.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\plugin\ventoy\theme\icons\red-hat.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\plugin\ventoy\theme\icons\ubuntu.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\plugin\ventoy\theme\icons\vtoyiso.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\plugin\ventoy\theme\menu_c.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\plugin\ventoy\theme\menu_e.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\plugin\ventoy\theme\menu_n.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\plugin\ventoy\theme\menu_ne.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\plugin\ventoy\theme\menu_nw.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\plugin\ventoy\theme\menu_s.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\plugin\ventoy\theme\menu_se.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\plugin\ventoy\theme\menu_sw.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\plugin\ventoy\theme\menu_w.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\plugin\ventoy\theme\select_c.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\plugin\ventoy\theme\slider_c.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\plugin\ventoy\theme\slider_n.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\plugin\ventoy\theme\slider_s.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\plugin\ventoy\theme\terminal_box_c.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\plugin\ventoy\theme\terminal_box_e.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\plugin\ventoy\theme\terminal_box_n.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\plugin\ventoy\theme\terminal_box_ne.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\plugin\ventoy\theme\terminal_box_nw.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\plugin\ventoy\theme\terminal_box_s.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\plugin\ventoy\theme\terminal_box_se.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\plugin\ventoy\theme\terminal_box_sw.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\plugin\ventoy\theme\terminal_box_w.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\plugin\ventoy\theme\theme.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\plugin\ventoy\ventoy.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\plugin\ventoy\ventoy_grub.cfg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\Ventoy2Disk.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\Ventoy2Disk.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\VentoyPlugson.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\VentoyPlugson.log">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\VentoyVlnk.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\VentoyVlnk.log">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\ventoy\languages.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\ventoy\plugson.tar.xz">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\ventoy\ventoy.disk.img.xz">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\ventoy\ventoy_4k.disk.img.xz">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Ventoy\ventoy\version">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Assets\Themes\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\Images\wooden-computer.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+</Project>

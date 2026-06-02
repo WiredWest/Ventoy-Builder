@@ -1,0 +1,621 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Threading.Tasks;
+using System.Windows;
+using Microsoft.Win32;
+using Ventoy_Builder.Models;
+using Ventoy_Builder.Services;
+
+namespace Ventoy_Builder
+{
+    public partial class MainWindow : Window
+    {
+        private readonly UsbDriveService _usbService;
+        private UsbDriveInfo? _selectedDrive;
+
+        public MainWindow()
+        {
+            InitializeComponent();
+
+            _usbService = new UsbDriveService();
+
+            AddLog("Ventoy Builder started.");
+            SetProgress("Progress: idle", 0, "");
+
+            LoadUsbDrives();
+
+            UsbDriveList.SelectionChanged += UsbDriveList_SelectionChanged;
+        }
+
+        private void AddLog(string message)
+        {
+            string line = $"[{DateTime.Now:HH:mm:ss}] {message}";
+            LogTextBox.AppendText(line + Environment.NewLine);
+            LogTextBox.ScrollToEnd();
+        }
+
+        private void SetProgress(string label, double value, string detail)
+        {
+            ProgressLabel.Text = label;
+            MainProgressBar.Value = value;
+            ProgressDetailText.Text = detail;
+        }
+
+        private void SetBusy(bool isBusy)
+        {
+            UsbDriveList.IsEnabled = !isBusy;
+            RefreshButton.IsEnabled = !isBusy;
+            InstallVentoyButton.IsEnabled = !isBusy;
+            UpdateVentoyButton.IsEnabled = !isBusy;
+            LaunchVentoyGuiButton.IsEnabled = !isBusy;
+            CreateFoldersButton.IsEnabled = !isBusy;
+            AddIsoButton.IsEnabled = !isBusy;
+            UseGptCheckBox.IsEnabled = !isBusy;
+        }
+
+        private bool ValidateSelectedDrive()
+        {
+            if (_selectedDrive == null)
+            {
+                MessageBox.Show(
+                    "Please select a USB drive first.",
+                    "No Drive Selected",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+
+                AddLog("Validation failed: no drive selected.");
+                return false;
+            }
+
+            if (!_selectedDrive.IsReady)
+            {
+                MessageBox.Show(
+                    "Selected drive is not ready.",
+                    "Drive Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+
+                AddLog("Validation failed: drive not ready.");
+                return false;
+            }
+
+            if (!_selectedDrive.IsRemovable)
+            {
+                MessageBox.Show(
+                    "Selected drive is not removable.",
+                    "Drive Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+
+                AddLog("Validation failed: drive not removable.");
+                return false;
+            }
+
+            if (_selectedDrive.TotalSizeBytes < 8L * 1024 * 1024 * 1024)
+            {
+                MessageBox.Show(
+                    "Drive appears too small for Ventoy usage.",
+                    "Drive Too Small",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+
+                AddLog("Validation failed: drive too small.");
+                return false;
+            }
+
+            return true;
+        }
+
+        private void LoadUsbDrives()
+        {
+            List<UsbDriveInfo> drives = _usbService.GetUsbDrives();
+
+            UsbDriveList.ItemsSource = drives;
+            StatusText.Text = $"Detected {drives.Count} removable drives";
+
+            AddLog($"Detected {drives.Count} removable drive(s).");
+        }
+
+        private void UsbDriveList_SelectionChanged(
+            object sender,
+            System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            _selectedDrive = UsbDriveList.SelectedItem as UsbDriveInfo;
+
+            if (_selectedDrive == null)
+            {
+                DriveInfoText.Text = "";
+                return;
+            }
+
+            DriveInfoText.Text =
+                $"Drive: {_selectedDrive.DriveLetter}\n" +
+                $"Label: {_selectedDrive.Label}\n" +
+                $"File System: {_selectedDrive.FileSystem}\n" +
+                $"Total Size: {_selectedDrive.SizeText}\n" +
+                $"Free Space: {_selectedDrive.FreeSpaceText}\n" +
+                $"Path: {_selectedDrive.FullPath}\n" +
+                $"Removable: {_selectedDrive.IsRemovable}";
+
+            StatusText.Text = $"Selected {_selectedDrive.DriveLetter}";
+
+            AddLog(
+                $"Selected drive {_selectedDrive.DriveLetter} " +
+                $"{_selectedDrive.Label} " +
+                $"{_selectedDrive.SizeText}.");
+        }
+
+        private void RefreshButton_Click(object sender, RoutedEventArgs e)
+        {
+            LoadUsbDrives();
+            DriveInfoText.Text = "";
+            _selectedDrive = null;
+
+            AddLog("Drive list refreshed.");
+        }
+
+        private void CreateFoldersButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!ValidateSelectedDrive())
+                return;
+
+            string[] folders =
+            {
+                "Windows",
+                "Linux",
+                "Recovery",
+                "Utilities",
+                "Drivers",
+                "Images",
+                "Tools",
+                "ventoy",
+                "ventoy/themes"
+            };
+
+            foreach (string folder in folders)
+            {
+                string path = Path.Combine(_selectedDrive!.FullPath, folder);
+                Directory.CreateDirectory(path);
+                AddLog($"Created folder: {path}");
+            }
+
+            StatusText.Text = "Folder layout created.";
+            AddLog("Folder layout created successfully.");
+            SetProgress("Progress: folder layout created", 100, "Folder structure is ready.");
+
+            MessageBox.Show(
+                "Folder layout created successfully.",
+                "Done",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+        }
+
+        private async void AddIsoButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!ValidateSelectedDrive())
+                return;
+
+            OpenFileDialog dialog = new OpenFileDialog
+            {
+                Multiselect = true,
+                Filter = "Boot Images|*.iso;*.img;*.wim;*.vhd;*.vhdx"
+            };
+
+            bool? result = dialog.ShowDialog();
+
+            if (result != true)
+            {
+                AddLog("Add ISO cancelled.");
+                return;
+            }
+
+            try
+            {
+                SetBusy(true);
+                SetProgress("Progress: preparing copy", 0, "Calculating total size...");
+                StatusText.Text = "Copying image files...";
+
+                await CopyImageFilesAsync(dialog.FileNames);
+
+                StatusText.Text = $"Copied {dialog.FileNames.Length} image(s)";
+                SetProgress("Progress: complete", 100, "Image copy completed successfully.");
+                AddLog($"Copied {dialog.FileNames.Length} image(s).");
+
+                MessageBox.Show(
+                    "Images copied successfully.",
+                    "Done",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                StatusText.Text = "Copy failed.";
+                SetProgress("Progress: failed", MainProgressBar.Value, ex.Message);
+
+                MessageBox.Show(
+                    ex.Message,
+                    "Copy Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+
+                AddLog($"Copy error: {ex.Message}");
+            }
+            finally
+            {
+                SetBusy(false);
+                LoadUsbDrives();
+            }
+        }
+
+        private async Task CopyImageFilesAsync(string[] files)
+        {
+            long totalBytes = 0;
+
+            foreach (string file in files)
+            {
+                FileInfo info = new FileInfo(file);
+                totalBytes += info.Length;
+            }
+
+            if (_selectedDrive != null && totalBytes > _selectedDrive.FreeSpaceBytes)
+            {
+                throw new IOException(
+                    $"Not enough free space on {_selectedDrive.DriveLetter}. " +
+                    $"Need {FormatSize(totalBytes)}, available {_selectedDrive.FreeSpaceText}.");
+            }
+
+            long copiedTotalBytes = 0;
+
+            foreach (string sourcePath in files)
+            {
+                string fileName = Path.GetFileName(sourcePath);
+                string destinationFolder = DetermineCategoryFolder(fileName);
+
+                string destinationPath =
+                    Path.Combine(
+                        _selectedDrive!.FullPath,
+                        destinationFolder,
+                        fileName);
+
+                Directory.CreateDirectory(
+                    Path.GetDirectoryName(destinationPath)!);
+
+                AddLog($"Copying {fileName} to {destinationFolder}...");
+
+                await CopyFileWithProgressAsync(
+                    sourcePath,
+                    destinationPath,
+                    totalBytes,
+                    () => copiedTotalBytes,
+                    bytesCopiedForFile =>
+                    {
+                        long overallCopied = copiedTotalBytes + bytesCopiedForFile;
+                        double percent = totalBytes == 0
+                            ? 0
+                            : (overallCopied / (double)totalBytes) * 100d;
+
+                        SetProgress(
+                            $"Progress: {percent:F1}%",
+                            percent,
+                            $"Copying {fileName} ({FormatSize(overallCopied)} of {FormatSize(totalBytes)})");
+                    });
+
+                copiedTotalBytes += new FileInfo(sourcePath).Length;
+
+                AddLog($"Copied {fileName}");
+            }
+        }
+
+        private async Task CopyFileWithProgressAsync(
+            string sourcePath,
+            string destinationPath,
+            long totalBytes,
+            Func<long> getCopiedBeforeFile,
+            Action<long> reportFileBytesCopied)
+        {
+            const int bufferSize = 1024 * 1024;
+
+            byte[] buffer = new byte[bufferSize];
+            long fileCopiedBytes = 0;
+
+            using FileStream sourceStream =
+                new FileStream(
+                    sourcePath,
+                    FileMode.Open,
+                    FileAccess.Read,
+                    FileShare.Read,
+                    bufferSize,
+                    useAsync: true);
+
+            using FileStream destinationStream =
+                new FileStream(
+                    destinationPath,
+                    FileMode.Create,
+                    FileAccess.Write,
+                    FileShare.None,
+                    bufferSize,
+                    useAsync: true);
+
+            int bytesRead;
+
+            while ((bytesRead = await sourceStream.ReadAsync(buffer, 0, buffer.Length)) > 0)
+            {
+                await destinationStream.WriteAsync(buffer, 0, bytesRead);
+
+                fileCopiedBytes += bytesRead;
+                reportFileBytesCopied(fileCopiedBytes);
+            }
+        }
+
+        private async void InstallVentoyButton_Click(object sender, RoutedEventArgs e)
+        {
+            await RunVentoyCliAsync("/I");
+        }
+
+        private async void UpdateVentoyButton_Click(object sender, RoutedEventArgs e)
+        {
+            await RunVentoyCliAsync("/U");
+        }
+
+        private void LaunchVentoyGuiButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string exePath = GetVentoyExePath();
+
+                if (!File.Exists(exePath))
+                {
+                    MessageBox.Show(
+                        "Ventoy2Disk.exe not found.",
+                        "Missing File",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+
+                    AddLog("Ventoy GUI launch failed: executable missing.");
+                    return;
+                }
+
+                ProcessStartInfo psi = new ProcessStartInfo
+                {
+                    FileName = exePath,
+                    WorkingDirectory = Path.GetDirectoryName(exePath),
+                    UseShellExecute = true,
+                    Verb = "runas"
+                };
+
+                Process.Start(psi);
+
+                StatusText.Text = "Ventoy GUI launched.";
+                AddLog("Ventoy GUI launched as administrator.");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    ex.Message,
+                    "Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+
+                AddLog($"Ventoy GUI launch error: {ex.Message}");
+            }
+        }
+
+        private async Task RunVentoyCliAsync(string command)
+        {
+            if (!ValidateSelectedDrive())
+                return;
+
+            string actionText = command == "/I" ? "INSTALL" : "UPDATE";
+
+            MessageBoxResult confirm =
+                MessageBox.Show(
+                    $"WARNING:\n\n" +
+                    $"You are about to {actionText} Ventoy on:\n\n" +
+                    $"{_selectedDrive!.DriveLetter}\n" +
+                    $"{_selectedDrive.Label}\n" +
+                    $"{_selectedDrive.SizeText}\n\n" +
+                    $"Install can erase/modify the USB drive.\n\n" +
+                    $"Continue?",
+                    $"Ventoy {actionText}",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);
+
+            if (confirm != MessageBoxResult.Yes)
+            {
+                AddLog($"Ventoy {actionText.ToLower()} cancelled.");
+                return;
+            }
+
+            try
+            {
+                string exePath = GetVentoyExePath();
+
+                if (!File.Exists(exePath))
+                {
+                    MessageBox.Show(
+                        "Ventoy2Disk.exe not found.",
+                        "Missing File",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+
+                    AddLog("Ventoy CLI failed: executable missing.");
+                    return;
+                }
+
+                string ventoyFolder = Path.GetDirectoryName(exePath)!;
+
+                DeleteVentoyCliResultFiles(ventoyFolder);
+
+                string driveArg =
+                    $"/Drive:{_selectedDrive.DriveLetter.TrimEnd('\\')}";
+
+                string partitionStyle =
+                    UseGptCheckBox.IsChecked == true ? "/GPT" : "";
+
+                string args =
+                    $"VTOYCLI {command} {driveArg} {partitionStyle} /FS:EXFAT";
+
+                AddLog($"Starting Ventoy CLI: {args}");
+                StatusText.Text = $"Running Ventoy {actionText.ToLower()}...";
+                SetProgress($"Progress: Ventoy {actionText.ToLower()} started", 0, "Waiting for Ventoy to finish...");
+
+                SetBusy(true);
+
+                await Task.Run(() =>
+                {
+                    ProcessStartInfo psi = new ProcessStartInfo
+                    {
+                        FileName = exePath,
+                        Arguments = args,
+                        WorkingDirectory = ventoyFolder,
+                        UseShellExecute = true,
+                        Verb = "runas"
+                    };
+
+                    using Process? process = Process.Start(psi);
+
+                    if (process != null)
+                    {
+                        process.WaitForExit();
+                    }
+                });
+
+                string doneFile = Path.Combine(ventoyFolder, "cli_done.txt");
+                string logFile = Path.Combine(ventoyFolder, "cli_log.txt");
+
+                if (File.Exists(doneFile))
+                {
+                    string doneResult = File.ReadAllText(doneFile).Trim();
+
+                    if (doneResult == "0")
+                    {
+                        StatusText.Text = $"Ventoy {actionText.ToLower()} complete.";
+                        SetProgress($"Progress: Ventoy {actionText.ToLower()} complete", 100, "Ventoy operation completed successfully.");
+                        AddLog($"Ventoy {actionText.ToLower()} completed successfully.");
+
+                        MessageBox.Show(
+                            $"Ventoy {actionText.ToLower()} completed successfully.",
+                            "Success",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Information);
+                    }
+                    else
+                    {
+                        StatusText.Text = $"Ventoy {actionText.ToLower()} failed.";
+                        SetProgress($"Progress: Ventoy {actionText.ToLower()} failed", 0, "Check the activity log.");
+
+                        AddLog($"Ventoy {actionText.ToLower()} failed. cli_done.txt = {doneResult}");
+
+                        if (File.Exists(logFile))
+                        {
+                            AddLog("Ventoy CLI log:");
+                            AddLog(File.ReadAllText(logFile));
+                        }
+
+                        MessageBox.Show(
+                            $"Ventoy {actionText.ToLower()} failed. Check the activity log.",
+                            "Ventoy Error",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
+                    }
+                }
+                else
+                {
+                    StatusText.Text = "Ventoy result unknown.";
+                    SetProgress("Progress: Ventoy result unknown", 0, "cli_done.txt was not found.");
+                    AddLog("Ventoy CLI finished, but cli_done.txt was not found.");
+
+                    MessageBox.Show(
+                        "Ventoy finished, but no result file was found.",
+                        "Unknown Result",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    ex.Message,
+                    "Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+
+                SetProgress("Progress: Ventoy error", 0, ex.Message);
+                AddLog($"Ventoy CLI error: {ex.Message}");
+            }
+            finally
+            {
+                SetBusy(false);
+                LoadUsbDrives();
+            }
+        }
+
+        private string GetVentoyExePath()
+        {
+            return Path.Combine(
+                AppDomain.CurrentDomain.BaseDirectory,
+                "Assets",
+                "Ventoy",
+                "Ventoy2Disk.exe");
+        }
+
+        private void DeleteVentoyCliResultFiles(string ventoyFolder)
+        {
+            string[] files =
+            {
+                "cli_log.txt",
+                "cli_percent.txt",
+                "cli_done.txt"
+            };
+
+            foreach (string file in files)
+            {
+                string path = Path.Combine(ventoyFolder, file);
+
+                if (File.Exists(path))
+                    File.Delete(path);
+            }
+        }
+
+        private string DetermineCategoryFolder(string fileName)
+        {
+            string lower = fileName.ToLower();
+
+            if (lower.Contains("windows") ||
+                lower.Contains("win10") ||
+                lower.Contains("win11"))
+                return "Windows";
+
+            if (lower.Contains("ubuntu") ||
+                lower.Contains("linux") ||
+                lower.Contains("debian") ||
+                lower.Contains("fedora") ||
+                lower.Contains("mint"))
+                return "Linux";
+
+            if (lower.Contains("hirens") ||
+                lower.Contains("recovery") ||
+                lower.Contains("rescue") ||
+                lower.Contains("medicat"))
+                return "Recovery";
+
+            if (lower.Contains("driver"))
+                return "Drivers";
+
+            return "Utilities";
+        }
+
+        private string FormatSize(long bytes)
+        {
+            double gb = bytes / 1024d / 1024d / 1024d;
+
+            if (gb >= 1)
+                return $"{gb:F2} GB";
+
+            double mb = bytes / 1024d / 1024d;
+            return $"{mb:F1} MB";
+        }
+    }
+}

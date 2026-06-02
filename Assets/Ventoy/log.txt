@@ -1,0 +1,158 @@
+[2026/06/01 17:11:30.557] 
+##################################################################################
+############################## Ventoy2DiskX86  #############################
+##################################################################################
+[2026/06/01 17:11:30.557] Current Directory <B:\ventoy-1.1.12-windows\ventoy-1.1.12>
+[2026/06/01 17:11:30.557] Exe file path <B:\ventoy-1.1.12-windows\ventoy-1.1.12\Ventoy2Disk.exe>
+[2026/06/01 17:11:30.557] Current directory check OK.
+[2026/06/01 17:11:30.558] Current directory:<B:\ventoy-1.1.12-windows\ventoy-1.1.12>
+[2026/06/01 17:11:30.570] ######### Current Ventoy Version: Ventoy2DiskX86 1.1.12 ########
+[2026/06/01 17:11:30.608] id=12444/18912
+[2026/06/01 17:11:30.608] PPath:<C:\Windows\explorer.exe>
+[2026/06/01 17:11:30.619] PSize:<3340216 3261KB>
+[2026/06/01 17:11:30.632] Lunch main process 0
+[2026/06/01 17:11:30.639] Control Flag: 0 1 1
+[2026/06/01 17:11:30.650] Windows Version: <<Windows 11 Pro, 64-bit (Build 26200.8524)>>
+[2026/06/01 17:11:30.655] 
+===================== Enum All PhyDrives =====================
+[2026/06/01 17:11:30.666] RegOpenKeyExA <SYSTEM\CurrentControlSet\Services\disk\Enum> Ret:0
+[2026/06/01 17:11:30.676] RegQueryValueExA <Count> ret:0  Size:4 Value:11
+[2026/06/01 17:11:30.687] GetPhysicalDriveCount: 11
+[2026/06/01 17:11:30.696] Logical Drives: 0x3be0dee
+[2026/06/01 17:11:30.709] LogicalDrive:\\.\B: PhyDrive:6 Num:1 Offset:16777216 ExtentLength:512092012544
+[2026/06/01 17:11:30.722] B --> 6
+[2026/06/01 17:11:30.735] LogicalDrive:\\.\C: PhyDrive:4 Num:1 Offset:554733568 ExtentLength:1998774599680
+[2026/06/01 17:11:30.744] C --> 4
+[2026/06/01 17:11:30.754] LogicalDrive:\\.\D: PhyDrive:3 Num:1 Offset:135266304 ExtentLength:4000650887168
+[2026/06/01 17:11:30.766] D --> 3
+[2026/06/01 17:11:30.777] LogicalDrive:\\.\F: PhyDrive:0 Num:1 Offset:16777216 ExtentLength:4000768327680
+[2026/06/01 17:11:30.787] F --> 0
+[2026/06/01 17:11:30.796] LogicalDrive:\\.\G: PhyDrive:8 Num:1 Offset:1048576 ExtentLength:4000750501888
+[2026/06/01 17:11:30.804] G --> 8
+[2026/06/01 17:11:30.814] LogicalDrive:\\.\H: PhyDrive:5 Num:1 Offset:16777216 ExtentLength:1000186314752
+[2026/06/01 17:11:30.823] H --> 5
+[2026/06/01 17:11:30.833] LogicalDrive:\\.\I: PhyDrive:1 Num:1 Offset:16777216 ExtentLength:1000186314752
+[2026/06/01 17:11:30.841] I --> 1
+[2026/06/01 17:11:30.849] LogicalDrive:\\.\K: PhyDrive:7 Num:1 Offset:1048576 ExtentLength:12000102973440
+[2026/06/01 17:11:30.858] K --> 7
+[2026/06/01 17:11:30.865] LogicalDrive:\\.\L: PhyDrive:2 Num:1 Offset:554708992 ExtentLength:499030592000
+[2026/06/01 17:11:30.876] L --> 2
+[2026/06/01 17:11:30.889] Could not open the disk<\\.\R:>, error:5
+[2026/06/01 17:11:30.894] R --> -1
+[2026/06/01 17:11:30.905] LogicalDrive:\\.\S: PhyDrive:10 Num:1 Offset:0 ExtentLength:0
+[2026/06/01 17:11:30.911] S --> 10
+[2026/06/01 17:11:30.922] LogicalDrive:\\.\T: PhyDrive:11 Num:1 Offset:0 ExtentLength:0
+[2026/06/01 17:11:30.930] T --> 11
+[2026/06/01 17:11:30.939] Add phy11 to list
+[2026/06/01 17:11:30.951] Could not open the disk<\\.\U:>, error:5
+[2026/06/01 17:11:30.956] U --> -1
+[2026/06/01 17:11:30.967] Could not open the disk<\\.\V:>, error:5
+[2026/06/01 17:11:30.974] V --> -1
+[2026/06/01 17:11:30.984] DeviceIoControl IOCTL_VOLUME_GET_VOLUME_DISK_EXTENTS failed \\.\X:, error:1
+[2026/06/01 17:11:30.994] X --> -1
+[2026/06/01 17:11:31.001] DeviceIoControl IOCTL_VOLUME_GET_VOLUME_DISK_EXTENTS failed \\.\Y:, error:1
+[2026/06/01 17:11:31.011] Y --> -1
+[2026/06/01 17:11:31.019] DeviceIoControl IOCTL_VOLUME_GET_VOLUME_DISK_EXTENTS failed \\.\Z:, error:1
+[2026/06/01 17:11:31.029] Z --> -1
+[2026/06/01 17:11:31.043] Create file Handle:00000164 \\.\PhysicalDrive0 status:0
+[2026/06/01 17:11:31.048] PHYSICALDRIVE0 size 4000787030016 bytes
+[2026/06/01 17:11:31.058] Create file Handle:00000164 \\.\PhysicalDrive1 status:0
+[2026/06/01 17:11:31.067] PHYSICALDRIVE1 size 1000204886016 bytes
+[2026/06/01 17:11:31.080] Create file Handle:00000174 \\.\PhysicalDrive2 status:0
+[2026/06/01 17:11:31.089] PHYSICALDRIVE2 size 500107862016 bytes
+[2026/06/01 17:11:31.101] Create file Handle:00000174 \\.\PhysicalDrive3 status:0
+[2026/06/01 17:11:31.109] PHYSICALDRIVE3 size 4000787030016 bytes
+[2026/06/01 17:11:31.119] Create file Handle:00000174 \\.\PhysicalDrive4 status:0
+[2026/06/01 17:11:31.129] PHYSICALDRIVE4 size 2000398934016 bytes
+[2026/06/01 17:11:31.139] Create file Handle:00000174 \\.\PhysicalDrive5 status:0
+[2026/06/01 17:11:31.147] PHYSICALDRIVE5 size 1000204886016 bytes
+[2026/06/01 17:11:31.158] Create file Handle:00000178 \\.\PhysicalDrive6 status:0
+[2026/06/01 17:11:31.165] PHYSICALDRIVE6 size 512110190592 bytes
+[2026/06/01 17:11:31.177] Create file Handle:00000178 \\.\PhysicalDrive7 status:0
+[2026/06/01 17:11:31.185] PHYSICALDRIVE7 size 12000105070592 bytes
+[2026/06/01 17:11:31.197] Create file Handle:00000178 \\.\PhysicalDrive8 status:0
+[2026/06/01 17:11:31.206] PHYSICALDRIVE8 size 4000752599040 bytes
+[2026/06/01 17:11:31.215] Create file Handle:FFFFFFFF \\.\PhysicalDrive9 status:2
+[2026/06/01 17:11:31.686] Create file Handle:00000120 \\.\PhysicalDrive10 status:0
+[2026/06/01 17:11:31.687] DeviceIoControl IOCTL_DISK_GET_LENGTH_INFO failed error:21
+[2026/06/01 17:11:31.701] Create file Handle:00000160 \\.\PhysicalDrive11 status:0
+[2026/06/01 17:11:31.711] DeviceIoControl IOCTL_DISK_GET_LENGTH_INFO failed error:21
+[2026/06/01 17:11:31.719] PhyDrv:0 BusType:SATA Removable:0 Size:4000GB(4000787030016) Sector:512/4096 Name: WDC WD40PURZ-85TTDY0
+[2026/06/01 17:11:31.729] PhyDrv:1 BusType:SATA Removable:0 Size:1024GB(1000204886016) Sector:512/512 Name: Samsung SSD 860 QVO 1TB
+[2026/06/01 17:11:31.741] PhyDrv:2 BusType:SATA Removable:0 Size:512GB(500107862016) Sector:512/512 Name: Samsung SSD 850 EVO 500GB
+[2026/06/01 17:11:31.748] PhyDrv:3 BusType:SATA Removable:0 Size:4000GB(4000787030016) Sector:512/4096 Name: HGST HDN724040ALE640
+[2026/06/01 17:11:31.758] PhyDrv:4 BusType:Nvme Removable:0 Size:2048GB(2000398934016) Sector:512/4096 Name: Samsung SSD 980 PRO 2TB
+[2026/06/01 17:11:31.767] PhyDrv:5 BusType:Nvme Removable:0 Size:1024GB(1000204886016) Sector:512/4096 Name: WD Green SN350 1TB
+[2026/06/01 17:11:31.778] PhyDrv:6 BusType:Nvme Removable:0 Size:512GB(512110190592) Sector:512/4096 Name: NE-512 2280
+[2026/06/01 17:11:31.787] PhyDrv:7 BusType:USB  Removable:0 Size:12000GB(12000105070592) Sector:512/4096 Name:WD Elements 25A3
+[2026/06/01 17:11:31.797] PhyDrv:8 BusType:USB  Removable:0 Size:4000GB(4000752599040) Sector:512/4096 Name:WD My Passport 25E2
+[2026/06/01 17:11:31.808] LogicalDrive:\\.\B: PhyDrive:6 Num:1 Offset:16777216 ExtentLength:512092012544
+[2026/06/01 17:11:31.818] Logical Drive:B  ===> PhyDrive:6
+[2026/06/01 17:11:31.827] LogicalDrive:\\.\C: PhyDrive:4 Num:1 Offset:554733568 ExtentLength:1998774599680
+[2026/06/01 17:11:31.838] Logical Drive:C  ===> PhyDrive:4
+[2026/06/01 17:11:31.847] LogicalDrive:\\.\D: PhyDrive:3 Num:1 Offset:135266304 ExtentLength:4000650887168
+[2026/06/01 17:11:31.858] Logical Drive:D  ===> PhyDrive:3
+[2026/06/01 17:11:31.866] LogicalDrive:\\.\F: PhyDrive:0 Num:1 Offset:16777216 ExtentLength:4000768327680
+[2026/06/01 17:11:31.877] Logical Drive:F  ===> PhyDrive:0
+[2026/06/01 17:11:31.887] LogicalDrive:\\.\G: PhyDrive:8 Num:1 Offset:1048576 ExtentLength:4000750501888
+[2026/06/01 17:11:31.897] Logical Drive:G  ===> PhyDrive:8
+[2026/06/01 17:11:31.908] LogicalDrive:\\.\H: PhyDrive:5 Num:1 Offset:16777216 ExtentLength:1000186314752
+[2026/06/01 17:11:31.917] Logical Drive:H  ===> PhyDrive:5
+[2026/06/01 17:11:31.927] LogicalDrive:\\.\I: PhyDrive:1 Num:1 Offset:16777216 ExtentLength:1000186314752
+[2026/06/01 17:11:31.937] Logical Drive:I  ===> PhyDrive:1
+[2026/06/01 17:11:31.946] LogicalDrive:\\.\K: PhyDrive:7 Num:1 Offset:1048576 ExtentLength:12000102973440
+[2026/06/01 17:11:31.956] Logical Drive:K  ===> PhyDrive:7
+[2026/06/01 17:11:31.963] LogicalDrive:\\.\L: PhyDrive:2 Num:1 Offset:554708992 ExtentLength:499030592000
+[2026/06/01 17:11:31.971] Logical Drive:L  ===> PhyDrive:2
+[2026/06/01 17:11:31.982] Could not open the disk<\\.\R:>, error:5
+[2026/06/01 17:11:31.986] Logical Drive:R  ===> PhyDrive:-1
+[2026/06/01 17:11:31.997] LogicalDrive:\\.\S: PhyDrive:10 Num:1 Offset:0 ExtentLength:0
+[2026/06/01 17:11:32.003] Logical Drive:S  ===> PhyDrive:10
+[2026/06/01 17:11:32.016] LogicalDrive:\\.\T: PhyDrive:11 Num:1 Offset:0 ExtentLength:0
+[2026/06/01 17:11:32.027] Logical Drive:T  ===> PhyDrive:11
+[2026/06/01 17:11:32.046] Could not open the disk<\\.\U:>, error:5
+[2026/06/01 17:11:32.057] Logical Drive:U  ===> PhyDrive:-1
+[2026/06/01 17:11:32.077] Could not open the disk<\\.\V:>, error:5
+[2026/06/01 17:11:32.085] Logical Drive:V  ===> PhyDrive:-1
+[2026/06/01 17:11:32.098] DeviceIoControl IOCTL_VOLUME_GET_VOLUME_DISK_EXTENTS failed \\.\X:, error:1
+[2026/06/01 17:11:32.112] Logical Drive:X  ===> PhyDrive:-1
+[2026/06/01 17:11:32.127] DeviceIoControl IOCTL_VOLUME_GET_VOLUME_DISK_EXTENTS failed \\.\Y:, error:1
+[2026/06/01 17:11:32.139] Logical Drive:Y  ===> PhyDrive:-1
+[2026/06/01 17:11:32.147] DeviceIoControl IOCTL_VOLUME_GET_VOLUME_DISK_EXTENTS failed \\.\Z:, error:1
+[2026/06/01 17:11:32.156] Logical Drive:Z  ===> PhyDrive:-1
+[2026/06/01 17:11:32.176] Create file Handle:0000018C \\.\PhysicalDrive7 status:0
+[2026/06/01 17:11:32.192] Read MBR Ret:1 Size:512 code:183
+[2026/06/01 17:11:32.206] =========== Disk7 GPT Partition 1 ============
+[2026/06/01 17:11:32.219] PartTbl.PartType = {ebd0a0a2-b9e5-4433-87c0-68b6b72699c7}
+[2026/06/01 17:11:32.232] PartTbl.PartGuid = {34a5eff4-f8f8-4b11-a964-ff7cddb3dfcc}
+[2026/06/01 17:11:32.254] PartTbl.StartLBA = 2048
+[2026/06/01 17:11:32.269] PartTbl.LastLBA = 23437703167
+[2026/06/01 17:11:32.288] PartTbl.Attribute = 0x0
+[2026/06/01 17:11:32.302] PartTbl.Name = Elements
+[2026/06/01 17:11:32.314] Invalid ventoy efi part name <null>
+[2026/06/01 17:11:32.332] Create file Handle:00000188 \\.\PhysicalDrive8 status:0
+[2026/06/01 17:11:32.341] Read MBR Ret:1 Size:512 code:183
+[2026/06/01 17:11:32.353] =========== Disk8 GPT Partition 1 ============
+[2026/06/01 17:11:32.365] PartTbl.PartType = {ebd0a0a2-b9e5-4433-87c0-68b6b72699c7}
+[2026/06/01 17:11:32.379] PartTbl.PartGuid = {3405d104-f201-4785-9533-80d7e1bae460}
+[2026/06/01 17:11:32.393] PartTbl.StartLBA = 2048
+[2026/06/01 17:11:32.405] PartTbl.LastLBA = 7813967871
+[2026/06/01 17:11:32.417] PartTbl.Attribute = 0x0
+[2026/06/01 17:11:32.427] PartTbl.Name = My Passport
+[2026/06/01 17:11:32.438] Invalid ventoy efi part name <null>
+[2026/06/01 17:11:32.449] < WDC WD40PURZ-85TTDY0> is filtered for not USB type.
+[2026/06/01 17:11:32.459] < Samsung SSD 860 QVO 1TB> is filtered for not USB type.
+[2026/06/01 17:11:32.468] < Samsung SSD 850 EVO 500GB> is filtered for not USB type.
+[2026/06/01 17:11:32.478] < HGST HDN724040ALE640> is filtered for not USB type.
+[2026/06/01 17:11:32.487] < Samsung SSD 980 PRO 2TB> is filtered for not USB type.
+[2026/06/01 17:11:32.499] < WD Green SN350 1TB> is filtered for not USB type.
+[2026/06/01 17:11:32.509] < NE-512 2280> is filtered for not USB type.
+[2026/06/01 17:11:32.664] Load languages from json file ...
+[2026/06/01 17:11:32.665] language json file len:293123 json parse:0
+[2026/06/01 17:11:32.674] Total 53 languages ...
+[2026/06/01 17:11:32.924] Not ventoy disk, set secure boot option
+[2026/06/01 17:11:32.985] Courier New font <C:\WINDOWS\Fonts\couri.ttf> exist OK.
+[2026/06/01 17:11:32.985] system_dir=<C:\WINDOWS\system32>
+[2026/06/01 17:11:33.005] sysnative_dir=<C:\WINDOWS\Sysnative>
+[2026/06/01 17:11:33.023] LoadLibrary shell32.dll.mui SUCCESS
+[2026/06/01 17:11:33.047] SetAlertPromptHook SUCCESS
